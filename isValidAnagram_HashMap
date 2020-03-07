@@ -1,0 +1,29 @@
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+        
+        HashMap<Character, Integer> frequencyCounter = new HashMap<Character, Integer>();
+        for (int i=0; i<s.length(); i++) {
+            frequencyCounter.put(s.charAt(i), frequencyCounter.getOrDefault(s.charAt(i), 0)+1);
+            frequencyCounter.put(t.charAt(i), frequencyCounter.getOrDefault(t.charAt(i), 0)-1);
+        }
+        
+        /*
+        System.out.println("After iterating on t and s string");
+        for (int i=0; i<26; i++) {
+            if (alphabetArray[i] != 0) {
+                System.out.println("Character: "+ ((char)(i+'A')) + " ; Occurrence: " +  alphabetArray[i]);   
+            }
+        }
+        */
+        
+        for (Map.Entry<Character, Integer> entry: frequencyCounter.entrySet()) {
+            if (entry.getValue() != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

@@ -1,0 +1,32 @@
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+        
+        int[] alphabetArray = new int[26];
+        for (int i=0; i<s.length(); i++) {
+            char sCharacter = Character.toUpperCase(s.charAt(i));
+            alphabetArray[sCharacter-'A']++;
+            
+            char tCharacter = Character.toUpperCase(t.charAt(i));
+            alphabetArray[tCharacter-'A']--;
+        }
+        
+        /*
+        System.out.println("After iterating on t and s string");
+        for (int i=0; i<26; i++) {
+            if (alphabetArray[i] != 0) {
+                System.out.println("Character: "+ ((char)(i+'A')) + " ; Occurrence: " +  alphabetArray[i]);   
+            }
+        }
+        */
+        
+        for (int i=0; i<26; i++) {
+            if (alphabetArray[i] != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
