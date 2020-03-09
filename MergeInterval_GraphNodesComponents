@@ -1,0 +1,146 @@
+class Solution {
+    Map<int[], List<int[]>> graph = new HashMap<int[], List<int[]>>();
+    Map<Integer, List<int[]>> nodesInComponent = new HashMap<Integer, List<int[]>>();
+    Set<int[]> visited = new HashSet<int[]>();
+    
+    public boolean isOverLapping(int[] interval1, int[] interval2) {
+        return interval1[0] <= interval2[1] && interval2[0] <= interval1[1];
+    }
+    
+    public void createGraph(int[][] intervals) {
+        for (int[] interval: intervals) {
+            graph.put(interval, new LinkedList<>());
+        }
+        
+        for (int[] interval1: intervals) {
+            for (int[] interval2: intervals) {
+                if (isOverLapping(interval1, interval2)) {
+                    graph.get(interval1).add(interval2);
+                    graph.get(interval2).add(interval1);
+                }
+            }
+        }
+    }
+    
+    public void markComponents(int[][] intervals) {
+        int componentCount = 0;
+        
+        for (int[] interval: intervals) {
+            if (!visited.contains(interval)) {
+                searchNodesViaDfs(interval, componentCount);    
+                componentCount++;
+            }
+        }
+    }  
+    
+    public void searchNodesViaDfs(int[] interval, int component) {
+        Stack<int[]> stack = new Stack<int[]>();
+        stack.push(interval);
+        
+        while(!stack.isEmpty()) {
+            int[] currentInterval = stack.pop();
+            
+            if (!visited.contains(currentInterval)) {
+                visited.add(currentInterval);
+            }
+            
+            
+            if (!nodesInComponent.containsKey(component)) {
+                nodesInComponent.put(component, new LinkedList<>());
+            }
+            nodesInComponent.get(component).add(interval);
+            
+            for (int[] values: graph.get(interval)) {
+                stack.push(values);
+            }
+        }   
+    }
+    
+    public int[] MergeNodesInSameComponent(List<int[]> nodes) {
+        int intervalStart = Integer.MAX_VALUE;
+        int intervalEnd = Integer.MIN_VALUE;
+        
+        for (int[] node: nodes) {
+            intervalStart = Math.min(intervalStart, node[0]);
+            intervalEnd = Math.max(intervalEnd, node[1]);
+        }
+        
+        return new int[] {intervalStart, intervalEnd};
+    }
+    
+    public int[][] merge(int[][] intervals) {
+        createGraph(intervals);
+        markComponents(intervals);
+        
+        /*
+        for (Map.Entry<int[], List<int[]>> entry: graph.entrySet()) {
+            System.out.println("Key: " + Arrays.toString(entry.getKey()));
+            
+            List<int[]> values = entry.getValue();
+            for (int[] value: values) {
+                System.out.print("; Value: " + Arrays.toString(value));
+            }
+            System.out.println();
+        }
+        */
+        
+        List<int[]> merged = new LinkedList<>();
+        for (Map.Entry<Integer, List<int[]>> entry: nodesInComponent.entrySet()) {
+            merged.add(MergeNodesInSameComponent(entry.getValue()));
+        }
+        
+        return merged.toArray(new int[merged.size()][2]);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
