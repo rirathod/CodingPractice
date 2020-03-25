@@ -1,0 +1,37 @@
+class Solution {
+    
+    public int fib(int N) {
+        if (N == 0) {
+            return 0;
+        }
+        
+        if (N == 1) {
+            return 1;
+        }
+        
+        int[] fibonacci = new int[N+1];
+        for(int i=0; i<N+1; i++) {
+            fibonacci[i] = -1;
+        }
+        
+        
+        fibonacci[0] = 0;
+        fibonacci[1] = 1;
+        
+        System.out.println(Arrays.toString(fibonacci));
+        return fibonacciHelper(N, fibonacci);
+    }
+    
+    public int fibonacciHelper(int N, int[] fibonacci) {
+        if (N < 0) {
+            return 0;
+        }
+        
+        if (fibonacci[N] != -1) {
+            return fibonacci[N];
+        }
+        
+        fibonacci[N] = fibonacciHelper(N-1, fibonacci) + fibonacciHelper(N-2, fibonacci);
+        return fibonacci[N];
+    }
+}
