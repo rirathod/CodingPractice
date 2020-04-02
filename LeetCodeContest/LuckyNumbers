@@ -1,0 +1,82 @@
+class Solution {
+    public List<Integer> luckyNumbers (int[][] matrix) {
+        int numRows = matrix.length;
+        int numColumns = matrix[0].length;
+        
+        int[][] temp1 = new int[numRows][numColumns];
+        for (int i=0; i<numRows; i++) {
+            for (int j=0; j<numColumns; j++) {
+                temp1[i][j] = matrix[i][j];
+            }
+        }
+        
+        Map<Integer, Integer> minMap = new HashMap<Integer, Integer>();
+        for (int i=0; i<numRows; i++) {
+            Arrays.sort(temp1[i]);
+            minMap.put(i, temp1[i][0]);
+        }
+        
+        Map<Integer, Integer> maxMap = new HashMap<Integer, Integer>();
+        for (int j=0; j<numColumns; j++) {
+            System.out.println("Max map creation j loop");
+            
+            for (int i=0; i<numRows; i++) { 
+                System.out.println("Max map creation i loop");
+                System.out.println("i=" + i + "; j=" + j + "; matrix[i][j]=" + matrix[i][j]);
+                System.out.println("maxMap.containsKey(j)=" + maxMap.containsKey(j));
+                
+                if (maxMap.containsKey(j)) {
+                    System.out.println("maxMap.get(j)=" + maxMap.get(j));
+                    System.out.println("maxMap.get(j) < matrix[i][j] =" + (maxMap.get(j) < matrix[i][j]));
+                } 
+                
+                if (!maxMap.containsKey(j)) {
+                    maxMap.put(j, matrix[i][j]);
+                    continue;
+                }
+                
+                if (maxMap.containsKey(j) && maxMap.get(j) < matrix[i][j]) {
+                    
+                    System.out.println("Key: " + j + " Value: " + maxMap.get(j) + " newValue: " + matrix[i][j]); 
+                    maxMap.put(j, matrix[i][j]);
+                }
+            }
+        }
+        
+        List<Integer> result = new ArrayList<Integer>();
+        for (Map.Entry<Integer, Integer> minEntry: minMap.entrySet()) {
+            System.out.println("Min map: Key " + minEntry.getKey() + " Value " + minEntry.getValue());
+            
+            for(Map.Entry<Integer, Integer> maxEntry: maxMap.entrySet()) {
+                System.out.println("Max map: Key " + maxEntry.getKey() + " Value: " + maxEntry.getValue());
+                
+                if (minEntry.getValue() == maxEntry.getValue() && matrix[minEntry.getKey()][maxEntry.getKey()] == minEntry.getValue()) {
+                    result.add(minEntry.getValue());
+                }
+            } 
+        }
+
+        /*
+        List<Integer> result = new ArrayList<Integer>();
+        for (Map.Entry<Integer, Integer> minEntry: minMap.entrySet()) {
+            System.out.println("Min map: minEntry.getKey(): " + minEntry.getKey() + " : minEntry.getValue()" + minEntry.getValue());
+
+            
+            for(Map.Entry<Integer, Integer> maxEntry: maxMap.entrySet()) {
+                System.out.println("Max map: maxEntry.getKey(): " + maxEntry.getKey() + " maxEntry.getValue(): " + maxEntry.getValue());
+                System.out.println("minEntry.getValue() == maxEntry.getValue(): " + (minEntry.getValue() == maxEntry.getValue() ));
+                System.out.println("matrix[minEntry.getKey()][maxEntry.getKey()] == minEntry.getValue(): " + (matrix[minEntry.getKey()][maxEntry.getKey()] == minEntry.getValue()));
+                
+                if (minEntry.getValue().equals(maxEntry.getValue()) 
+                    && matrix[minEntry.getKey()][maxEntry.getKey()] == minEntry.getValue()) {
+                    
+                    
+                    result.add(minEntry.getValue());
+                }
+            } 
+        }
+        */
+        
+        return result;
+    }
+}
