@@ -1,0 +1,84 @@
+/*
+Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+push(x) -- Push element x onto stack.
+pop() -- Removes the element on top of the stack.
+top() -- Get the top element.
+getMin() -- Retrieve the minimum element in the stack.
+ 
+
+Example:
+MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.getMin();   --> Returns -3.
+minStack.pop();
+minStack.top();      --> Returns 0.
+minStack.getMin();   --> Returns -2.
+*/
+
+import java.util.*; 
+
+class MinStack {
+    int minElement;
+    LinkedList<Integer> stack;
+    
+    /** initialize your data structure here. */
+    public MinStack() {
+        minElement = Integer.MAX_VALUE;
+        stack = new LinkedList<Integer>();
+    }
+    
+    public void push(int x) {
+        stack.add(x);
+        if (x < minElement) {
+            minElement = x;
+        }
+    }
+    
+    public void pop() {
+        if (stack.size() > 0) { 
+            int poppedElement = stack.get(stack.size()-1);
+            System.out.println("Popped element: " + poppedElement);
+            
+            stack.removeLast();
+            
+            // Re-search for min element
+            if (poppedElement == minElement) {
+                
+                int newMinElement = Integer.MAX_VALUE;
+                for (int i=0; i<stack.size(); i++) {
+                    if (stack.get(i) < newMinElement) {
+                        newMinElement = stack.get(i);
+                    }
+                }
+                minElement = newMinElement;
+            }
+        }
+    }
+    
+    public int top() {
+        if (stack.size() <= 0) {
+            return -1;
+        } else {
+            return stack.get(stack.size()-1);
+        }
+    }
+    
+    public int getMin() {
+        if (stack.size() <= 0) {
+            return -1;
+        } else {            
+            return minElement;
+        }
+    }
+}
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack obj = new MinStack();
+ * obj.push(x);
+ * obj.pop();
+ * int param_3 = obj.top();
+ * int param_4 = obj.getMin();
+ */
