@@ -1,0 +1,80 @@
+/*
+A string S of lowercase English letters is given. We want to partition this string into as many parts as possible so that each letter appears in at most one part, and return a list of integers representing the size of these parts.
+
+Example 1:
+Input: S = "ababcbacadefegdehijhklij"
+Output: [9,7,8]
+Explanation:
+The partition is "ababcbaca", "defegde", "hijhklij".
+This is a partition so that each letter appears in at most one part.
+A partition like "ababcbacadefegde", "hijhklij" is incorrect, because it splits S into less parts.
+ 
+
+Note:
+S will have length in range [1, 500].
+S will consist of lowercase English letters ('a' to 'z') only.
+*/
+
+class Solution {
+    public List<Integer> partitionLabels(String S) {
+        Map<Character, List<Integer>> characterRangeMap = new LinkedHashMap<Character, List<Integer>>();
+        
+        for (int i=0; i<S.length(); i++) {
+            char c = S.charAt(i);
+            
+            if (characterRangeMap.containsKey(c)) {
+                List<Integer> range = characterRangeMap.get(c);
+                range.set(1, Math.max(range.get(1), i));
+                characterRangeMap.put(c, range);
+            } else {
+                List<Integer> range = new ArrayList<Integer>();
+                range.add(i);
+                range.add(i);
+                characterRangeMap.put(c, range);
+            }
+        }
+        printMap(characterRangeMap);
+        
+        List<List<Integer>> rangePartitions = new ArrayList<List<Integer>>();
+        for (Map.Entry<Character, List<Integer>> entry: characterRangeMap.entrySet()) {
+            boolean isCurRangeProcessed = false;
+            
+            List<Integer> curRange = entry.getValue();
+            for (int k=0; k<rangePartitions.size(); k++) {
+                int curRangeStart = curRange.get(0);
+                int curRangeEnd = curRange.get(1);
+                List<Integer> curPartition = rangePartitions.get(k); 
+                    
+                if (curRangeStart < curPartition.get(1) && curRangeEnd >= curPartition.get(0)) {
+                    curPartition.set(0, Math.min(curRangeStart, curPartition.get(0)));
+                    curPartition.set(1, Math.max(curRangeEnd, curPartition.get(1)));
+                    isCurRangeProcessed = true;
+                }
+            }
+                
+            if (!isCurRangeProcessed) {
+                rangePartitions.add(curRange);
+            }
+        }
+        
+        System.out.println("Range partitions:");
+        for (List<Integer> range: rangePartitions) {
+            System.out.println(Arrays.toString(range.toArray()));    
+        }
+        
+        
+        List<Integer> result = new ArrayList<Integer>();
+        for (List<Integer> range: rangePartitions) {
+            result.add(range.get(1) - range.get(0) + 1);
+        }
+        
+        return result;
+    }
+    
+    public void printMap(Map<Character, List<Integer>> map) {
+        for (Map.Entry<Character, List<Integer>> entry: map.entrySet()) {
+            System.out.print("Key: " + entry.getKey());
+            System.out.println("; Value: " + entry.getValue());
+        }
+    }
+}
