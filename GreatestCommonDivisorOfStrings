@@ -1,0 +1,59 @@
+/**
+For strings S and T, we say "T divides S" if and only if S = T + ... + T  (T concatenated with itself 1 or more times)
+Return the largest string X such that X divides str1 and X divides str2.
+
+Example 1:
+Input: str1 = "ABCABC", str2 = "ABC"
+Output: "ABC"
+
+Example 2:
+Input: str1 = "ABABAB", str2 = "ABAB"
+Output: "AB"
+
+Example 3:
+Input: str1 = "LEET", str2 = "CODE"
+Output: ""
+**/
+
+class Solution {
+    ArrayList<String> prefixes = new ArrayList<String>();
+    
+    public String gcdOfStrings(String str1, String str2) {
+        
+        // Consider prefixes
+        if (str1.length() < str2.length()) {
+            considerPrefixesFromSmallerString(str1, str2);
+        } else {
+            considerPrefixesFromSmallerString(str2, str1);
+        }
+                
+        String validRepeatingSubstring = "";
+        for (int i=prefixes.size()-1; i>=0; i--) {
+            String prefix = prefixes.get(i);
+            String replacedString1 = str1.replaceAll(prefix, "");
+            String replacedString2 = str2.replaceAll(prefix, "");
+            
+            //System.out.println("Prefix: " + prefix);
+            //System.out.println("Str1: Before: " + str1 + "; After: " + replacedString1);
+            //System.out.println("Str2: Before: " + str2 + "; After: " + replacedString2);
+            //System.out.println();
+            if (replacedString1.length() == 0 && replacedString2.length() == 0) {
+                if (prefix.length() > validRepeatingSubstring.length()) {
+                    validRepeatingSubstring = prefix;    
+                }
+            }
+        }
+        
+        return validRepeatingSubstring;
+    }
+    
+    public void considerPrefixesFromSmallerString(String s1, String s2) {
+        for (int i=0; i<s1.length()-1; i++) {
+            String prefix = s1.substring(0, i+1);
+            if ((s1.length() % prefix.length() == 0) && (s2.length() % prefix.length() == 0)){
+                prefixes.add(prefix);   
+            }
+        }
+        prefixes.add(s1);
+    }
+}
