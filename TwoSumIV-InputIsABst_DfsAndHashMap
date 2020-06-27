@@ -1,0 +1,77 @@
+/**
+Given a Binary Search Tree and a target number, return true if there exist two elements in the BST such that their sum is equal to the given target.
+
+Example 1:
+Input: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Target = 9
+Output: True
+ 
+
+Example 2:
+Input: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Target = 28
+Output: False
+**/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    private HashMap<Integer, Integer> elementFrequency = new HashMap<Integer, Integer>();
+    
+    public boolean findTarget(TreeNode root, int k) {
+        this.parseBinarySearchTree(root);
+        
+        for (Map.Entry<Integer, Integer> entry: elementFrequency.entrySet()) {
+            int remainder = k - entry.getKey();
+            if (elementFrequency.containsKey(remainder)) {
+                if (entry.getKey() == remainder && entry.getValue() < 2) {
+                    return false;
+                } 
+                return true;
+            }   
+        }
+        
+        return false;
+    }
+    
+    public void parseBinarySearchTree(TreeNode node) {
+        if (node == null) {
+            return;
+        }
+        
+        elementFrequency.put(node.val, elementFrequency.getOrDefault(node.val, 0) + 1);
+        
+        if (node.left != null) {
+            parseBinarySearchTree(node.left); 
+        }
+        
+        if (node.right != null) {
+            parseBinarySearchTree(node.right);
+        }
+    }
+}
