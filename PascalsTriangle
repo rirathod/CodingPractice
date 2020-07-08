@@ -1,0 +1,58 @@
+/**
+Given a non-negative integer numRows, generate the first numRows of Pascal's triangle.
+In Pascal's triangle, each number is the sum of the two numbers directly above it.
+Example:
+
+Input: 5
+Output:
+[
+     [1],
+    [1,1],
+   [1,2,1],
+  [1,3,3,1],
+ [1,4,6,4,1]
+]
+**/
+
+class Solution {
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        if (numRows == 0) return result; 
+        
+        if (numRows == 1) {
+            List<Integer> numRow = new ArrayList<Integer>();
+            numRow.add(1);
+            result.add(numRow);
+            return result;
+        }
+        
+        int[][] pascalsTriangle = new int[numRows][numRows];
+        pascalsTriangle[0][0] = 1;
+        pascalsTriangle[1][0] = 1;
+        pascalsTriangle[1][1] = 1;
+        
+        for (int i=2; i<pascalsTriangle.length; i++) {
+            for (int j=0; j<=i; j++) {
+                if (j == 0 || j == i) {
+                    pascalsTriangle[i][j] = 1;
+                    continue;
+                }
+                pascalsTriangle[i][j] = pascalsTriangle[i-1][j-1] + pascalsTriangle[i-1][j];
+            }
+        }
+        
+        for (int i=0; i<pascalsTriangle.length; i++) {
+            List<Integer> numRow = new ArrayList<Integer>();
+            
+            for (int j=0; j<pascalsTriangle[0].length; j++) {
+                if (pascalsTriangle[i][j] != 0) {
+                    numRow.add(pascalsTriangle[i][j]);    
+                }
+            }
+            
+            result.add(numRow);
+        }
+        
+        return result;
+    }
+}
