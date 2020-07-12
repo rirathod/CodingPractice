@@ -1,0 +1,61 @@
+/**
+Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+For example, this binary tree [1,2,2,3,4,4,3] is symmetric:
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+
+But the following [1,2,2,null,3,null,3] is not:
+    1
+   / \
+  2   2
+   \   \
+   3    3
+ 
+
+Follow up: Solve it both recursively and iteratively.
+**/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null) return true;
+        
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.add(root.left);
+        queue.add(root.right);
+        
+        while (!queue.isEmpty()) {
+            TreeNode leftTreePointer = queue.remove();
+            TreeNode rightTreePointer = queue.remove();
+            
+            if (leftTreePointer == null && rightTreePointer == null) continue;
+            if (leftTreePointer == null || rightTreePointer == null) return false;
+            if (leftTreePointer.val != rightTreePointer.val) return false;
+            
+            queue.add(leftTreePointer.left);
+            queue.add(rightTreePointer.right);
+            
+            queue.add(leftTreePointer.right);
+            queue.add(rightTreePointer.left);
+        }
+        
+        return true;
+    }
+}
