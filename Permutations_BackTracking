@@ -1,0 +1,44 @@
+/**
+Given a collection of distinct integers, return all possible permutations.
+
+Example:
+Input: [1,2,3]
+Output:
+[
+  [1,2,3],
+  [1,3,2],
+  [2,1,3],
+  [2,3,1],
+  [3,1,2],
+  [3,2,1]
+]
+**/
+
+
+class Solution {
+    List<List<Integer>> result = new ArrayList<List<Integer>>();
+    List<Integer> innerList = new ArrayList<Integer>();
+    
+    public List<List<Integer>> permute(int[] nums) {
+        permuteHelper(nums);
+        return result;
+    }
+    
+    public void permuteHelper(int[] nums) {
+        if (innerList.size() == nums.length) {
+            result.add(new ArrayList<Integer>(innerList));
+            return;
+        }
+        
+        for (int i=0; i<nums.length; i++) {
+            if (innerList.contains(nums[i])) {
+                continue;
+            }
+            
+            innerList.add(nums[i]);
+            permuteHelper(nums);
+            innerList.remove(innerList.size()-1);
+        }
+    }
+    
+}
