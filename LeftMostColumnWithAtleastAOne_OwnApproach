@@ -1,0 +1,50 @@
+/**
+ * // This is the BinaryMatrix's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * interface BinaryMatrix {
+ *     public int get(int row, int col) {}
+ *     public List<Integer> dimensions {}
+ * };
+ */
+
+class Solution {
+    public int leftMostColumnWithOne(BinaryMatrix binaryMatrix) {
+        List<Integer> dimensions = binaryMatrix.dimensions();
+        int numRows = dimensions.get(0);
+        int numCols = dimensions.get(1);
+        
+        int[] columnIndexForEachRow = new int[numRows];
+        for (int i=0; i<numRows; i++) {
+            columnIndexForEachRow[i] = rowBinarySearch(binaryMatrix, i, numCols);
+        }
+        
+        int minColumn = Integer.MAX_VALUE;
+        for (int i=0; i<numRows; i++) {
+            if (columnIndexForEachRow[i] == -1) {
+                continue;
+            }
+            minColumn = Math.min(minColumn, columnIndexForEachRow[i]);
+        }
+        
+        return minColumn == Integer.MAX_VALUE ? -1 : minColumn;
+    }
+    
+    public int rowBinarySearch(BinaryMatrix binaryMatrix, int row, int columns) {
+        int start = 0;
+        int end = columns-1;
+        
+        while (start < end) {
+            int mid = start + (end-start)/2;
+            int midElement = binaryMatrix.get(row, mid);
+            
+            if (midElement == 1) {
+                end = mid;
+            } else {
+                start = mid+1;                
+            }
+        }
+        
+        if (start < columns && binaryMatrix.get(row, start) == 1) return start;
+        return -1;
+    }
+}
