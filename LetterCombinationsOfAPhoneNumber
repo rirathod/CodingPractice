@@ -1,0 +1,49 @@
+/**
+Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent.
+A mapping of digit to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.
+
+Example:
+Input: "23"
+Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+Note:
+
+Although the above answer is in lexicographical order, your answer could be in any order you want.
+**/
+
+class Solution {
+    Map<Integer, String> phoneNumberMap = new HashMap<Integer, String>();
+    
+    public List<String> letterCombinations(String digits) {
+        List<String> result = new ArrayList<String>();
+        if (digits == null || digits.length() == 0) return result;
+        
+        phoneNumberMap.put(2, "abc");
+        phoneNumberMap.put(3, "def");
+        phoneNumberMap.put(4, "ghi");
+        phoneNumberMap.put(5, "jkl");
+        phoneNumberMap.put(6, "mno");
+        phoneNumberMap.put(7, "pqrs");
+        phoneNumberMap.put(8, "tuv");
+        phoneNumberMap.put(9, "wxyz");
+        
+        letterCombinationsHelper(digits, 0, "", result);
+        return result;
+    }
+    
+    public void letterCombinationsHelper(String digits, int curPosition, String currentString, List<String> result) {
+        if (currentString.length() == digits.length()) {
+            result.add(currentString);
+            return;
+        }
+        
+        int currentDigit = Character.getNumericValue(digits.charAt(curPosition));
+        String currentDigitString = phoneNumberMap.get(currentDigit);
+        StringBuilder builder = new StringBuilder(currentString);
+                
+        for (int i=0; i<currentDigitString.length(); i++) {
+            builder.append(currentDigitString.charAt(i));
+            letterCombinationsHelper(digits, curPosition+1, builder.toString(), result);
+            builder.deleteCharAt(builder.length()-1);
+        }
+    }
+}
